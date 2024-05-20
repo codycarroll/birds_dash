@@ -1,0 +1,350 @@
+---
+title: "birds_dash"
+author: "Cody"
+date: "2024-05-19"
+output: html_document
+---
+
+# Import packages 
+```{r}
+library(arrow)
+library(tidyverse)
+library(magrittr)
+library(ggpubr)
+library(stringr)
+library(rlang)
+library(ggplot2); theme_set(theme_bw())
+library(googlesheets4)
+library(fdapace)
+library(dplyr)
+library(plyr)
+library(pracma)
+library(tidyr)
+library(kdensity)
+library(circular)
+library(fda)
+library(gridExtra)
+library(patchwork)
+
+```
+
+# Clear Environment? 
+
+```{r}
+rm(list = ls())
+```
+
+
+# Import Raw Counts Data
+
+```{r}
+
+#raw counts data
+ebird19counts = read_parquet("~/Desktop/repos/birds_dash/data/eb19_raw_counts_all.parquet")
+ebird22counts = read_parquet("~/Desktop/repos/birds_dash/data/eb22_raw_counts_all.parquet")
+inat19counts = read_parquet("~/Desktop/repos/birds_dash/data/in19_raw_counts_all.parquet")
+inat22counts = read_parquet("~/Desktop/repos/birds_dash/data/in22_raw_counts_all.parquet")
+
+birdids_df = read.csv("~/Desktop/repos/birds_dash/data/birdids.csv")
+
+birdids = birdids_df$x
+
+#dictionary & traits
+bird_dict = read.csv("~/Desktop/repos/explorations_func_data/name_aviD_dict_22.csv")
+trait_data = read.csv("~/Desktop/bird_data/ELEData/TraitData/AVONET1_BirdLife.csv")
+
+#process trait data
+#isolate avibaseID
+split_list = str_split(trait_data$Avibase.ID1, "-")
+avibaseID_list = lapply(split_list, function(x) x[2])
+trait_data$AVIBASE = unlist(avibaseID_list)
+
+
+```
+
+
+# Filter to 260 Birds
+
+```{r}
+#filter to 260 birds:
+#(How do we decide these 260 birds? Write up.) 
+ebird19counts = ebird19counts %>% filter(AVIBASEID %in% birdids)
+inat19counts = inat19counts %>% filter(AVIBASEID %in% birdids)
+ebird22counts = ebird22counts %>% filter(AVIBASEID %in% birdids)
+inat22counts = inat22counts %>% filter(AVIBASEID %in% birdids)
+```
+
+
+#Combine into 1 df and also update separated versions with db/yr key
+
+```{r}
+count_list = list(ebird19 = ebird19counts,
+                  inat19 = inat19counts, 
+                  ebird22 = ebird22counts, 
+                  inat22 = inat22counts)
+allcounts = bind_rows(count_list, .id = "yr_db")
+
+
+ebird19counts = allcounts %>% filter(yr_db == "ebird19")
+ebird22counts = allcounts %>% filter(yr_db == "ebird22")
+inat19counts = allcounts %>% filter(yr_db == "inat19")
+inat22counts = allcounts %>% filter(yr_db == "inat22")
+
+```
+
+
+
+```{r}
+
+counts_to_relative = function(df){
+  df_relative = df
+
+  for(i in 1:nrow(df)){
+    df_relative[i, 2:53] = df[i, 2:53]/sum(df[i, 2:53]) #divide row #s by total to get relative counts
+  }
+
+  return(df_relative)
+#sanity check that they add to 1
+#df_relative[,2:53] %>% rowSums()
+}
+
+ebird19rel = counts_to_relative(ebird19counts)
+ebird22rel = counts_to_relative(ebird22counts)
+inat19rel = counts_to_relative(inat19counts)
+inat22rel = counts_to_relative(inat22counts)
+
+
+
+```
+
+#save unsmoothed relative data
+```{r}
+# write.csv(ebird19rel, "~/Desktop/repos/birds_dash/data/ebird19rel_raw.csv")
+# write.csv(ebird22rel, "~/Desktop/repos/birds_dash/data/ebird22rel_raw.csv")
+# write.csv(inat19rel, "~/Desktop/repos/birds_dash/data/inat19rel_raw.csv")
+# write.csv(inat19rel, "~/Desktop/repos/birds_dash/data/inat22rel_raw.csv")
+```
+
+
+#fourier smoothing
+```{r}
+four_smooth = function(df_relative, k = 3){
+  #establish time grid
+  t = 1:52
+  #curve data
+  database = df_relative[,1]
+  avibaseid = df_relative[,54]
+  y = unlist(t(df_relative[,2:53]))
+  wk_names = colnames(df_relative[,2:53])
+  #create a basis of dimension k 
+  k_basis = create.fourier.basis(rangeval = range(t), 
+                                 nbasis = k)
+  #smooth the curve data using the dimension of basis k 
+  smooth_y_basis = smooth.basis(argvals = t, 
+                                y = y, 
+                                fdParobj = k_basis)$fd
+  eval_y = eval.fd(t, smooth_y_basis)
+  
+  #prevent negatives
+  eval_y = pmax(eval_y, 0.001) 
+  
+  #renormalize
+  dens = eval_y
+  for(i in 1:ncol(eval_y)){
+    dens[,i] = eval_y[,i] / trapz(t, eval_y[,i])
+  }
+  dens = t(dens) # fix dim 
+  colnames(dens) = wk_names
+  
+  
+  output = bind_cols(database, dens, avibaseid)
+  
+  #output fourier smoothed normalized densities
+  return(output)
+}
+
+
+#smooth with 8-dim basis
+ebird19rel_smoothed = four_smooth(df = ebird19rel, k = 8)
+ebird22rel_smoothed = four_smooth(df = ebird22rel, k = 8)
+inat19rel_smoothed = four_smooth(df = inat19rel, k = 8)
+inat22rel_smoothed = four_smooth(df = inat22rel, k = 8)
+```
+
+
+#save fourier smoothed data
+```{r}
+# write.csv(ebird19rel_smoothed, "~/Desktop/repos/birds_dash/data/ebird19rel_fsmoothed.csv")
+# write.csv(ebird22rel_smoothed, "~/Desktop/repos/birds_dash/data/ebird22rel_fsmoothed.csv")
+# write.csv(inat19rel_smoothed, "~/Desktop/repos/birds_dash/data/inat19rel_fsmoothed.csv")
+# write.csv(inat19rel_smoothed, "~/Desktop/repos/birds_dash/data/inat22rel_fsmoothed.csv")
+```
+
+
+```{r}
+#optional: plot a couple comparisons to ensure fourier step working properly
+#yes!
+
+# ebird19rel_smoothed = four_smooth(df = ebird19rel, k = 8)
+# 
+# for(i in 1:10){
+#   plot(1:52, ebird19rel[i,2:53], type = "l"); lines(1:52, ebird19rel_smoothed[i,2:53], col = "red")
+# }
+
+
+```
+
+
+# create functions for plotting
+
+```{r}
+
+#function for long format
+make_long = function(df){
+  dflong = df %>%
+    pivot_longer(!c(AVIBASEID, yr_db), 
+                 names_prefix = "Week-", 
+                 names_to = "week",
+                 values_to = "count")
+  dflong$week = as.numeric(dflong$week)
+  #dflong$dataset = deparse(substitute(df))
+  return(dflong)
+}
+
+
+ebird19rel_smoothed_long = make_long(ebird19rel_smoothed)
+ebird22rel_smoothed_long = make_long(ebird22rel_smoothed)
+inat19rel_smoothed_long = make_long(inat19rel_smoothed)
+inat22rel_smoothed_long = make_long(inat22rel_smoothed)
+
+
+allbirdsrel_smoothed_long = rbind(ebird19rel_smoothed_long,
+                                  ebird22rel_smoothed_long,
+                                  inat19rel_smoothed_long,
+                                  inat22rel_smoothed_long)
+```
+
+
+```{r}
+
+#function for plotting relative smoothed curves on the circular/cartesian domains
+
+#right now this function just works on i, the index of the id in the vector which contains all bird ids
+#it matches it to the corresponding AVIBASEID and then the common name using bird_dict
+
+ggcirc = function(i, 
+                  circular = FALSE, 
+                  scalefix = FALSE){
+  #base
+  gg_base = ggplot(allbirdsrel_smoothed_long %>% 
+                     filter(AVIBASEID %in% birdids[i]), 
+                   aes(x = week, 
+                       y = count, 
+                       group = yr_db, 
+                       color = yr_db)) + 
+    geom_hline(yintercept=0, lwd = 1.25, color = "grey") + 
+    geom_hline(yintercept=1/52, color = "grey", linetype="dashed", lwd = 1.25) + 
+    ylab("frequency") + 
+    annotate("rect", 
+             xmin = 1, 
+             xmax = 9, 
+             ymin = 0, 
+             ymax = Inf, 
+             fill= "#B983FF", 
+             alpha = 0.2) + 
+    annotate("rect", 
+             xmin = 9, 
+             xmax = 9+13, 
+             ymin = 0, 
+             ymax = Inf, 
+             fill= "#00BA38", alpha = 0.2) + 
+    annotate("rect", 
+             xmin = 22, 
+             xmax = 35, 
+             ymin = 0, 
+             ymax = Inf, 
+             fill= "#A3A500", alpha = 0.2) + 
+    annotate("rect", 
+             xmin = 35, 
+             xmax = 48, 
+             ymin = 0, 
+             ymax = Inf, 
+             fill= "#E58700", alpha = 0.2) +
+    annotate("rect", 
+             xmin = 48, 
+             xmax = 52, 
+             ymin = 0, 
+             ymax = Inf, 
+             fill= "#B983FF", alpha = 0.2)
+  
+
+  
+  
+  matchidx = match(birdids[i], bird_dict$AVIBASEID)
+  common = bird_dict$CommonName[matchidx]
+  
+  #add bird curve plots
+  if(circular){
+    gg_onebird = gg_base +
+      geom_polygon(fill = NA, lwd = 1.1) + 
+      ggtitle(common) + 
+      theme(text=element_text(size=20),
+            aspect.ratio = 10/11) + 
+      labs(color = "Database/Year") + 
+      coord_polar() 
+  }else{
+    if(scalefix){
+      gg_base = gg_base + ylim(c(0,.12))
+    }
+    
+    gg_onebird = gg_base + 
+      geom_line(lwd = 1.1) + 
+      ggtitle(common) + 
+      theme(text=element_text(size=20),
+            aspect.ratio = 10/11, 
+            legend.position = "none") +
+      labs(color = "Database/Year") + 
+      guides(group="none", 
+             color = "none") + 
+      coord_cartesian(expand = FALSE)
+  }
+
+  
+  gg_onebird
+}
+```
+
+#function for plotting side by side
+
+```{r}
+
+sidebysideplot = function(i, scalefix = FALSE){
+  common = bird_dict$CommonName[match(i, bird_dict$AVIBASEID)]
+  
+  flat = ggcirc(i, circular = FALSE, scalefix = scalefix)
+  circ = ggcirc(i, circular = TRUE, scalefix = scalefix)
+  
+  gg = flat + circ + theme(plot.margin=grid::unit(c(0,0,0,0), "mm")) + 
+    plot_layout(ncol = 2, nrow = 1, guides = "collect")
+  
+  return(gg)
+
+}
+
+```
+
+```{r, fig.width=14}
+sidebysideplot(10, scalefix = TRUE)
+```
+
+
+For Seneth--
+
+What we want next:
+
+Create and host a website/github which allows you to display these side by side plots for a selected bird. Make a dropdown bar of the 260 birds available in this dataset that the user can scroll thru and select. Allow for options to switch scalefix on/off or to compare only specific dbs/years. Allow for settings to plot the unsmoothed curves. 
+
+Potentially allow for the user to select multiple birds at a time to facilitate comparisons. 
+
+
+
