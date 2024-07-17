@@ -1,6 +1,4 @@
 # NorCal Bird Dash 
-dashboard repo for inat/ebird data
-
 The [dashboard is temporarily located at this link](https://bird-dash-slssljz5da-uc.a.run.app/).
 
 ## Table of Contents
