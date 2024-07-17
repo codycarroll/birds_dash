@@ -1,5 +1,6 @@
 # NorCal Bird Dash 
-The [dashboard is temporarily located at this link](https://bird-dash-slssljz5da-uc.a.run.app/).
+The [dashboard is located at this link](https://birds-dash-547zxcr6ea-uc.a.run.app/),
+with a [backup hosted on Dash here](https://bird-dash-slssljz5da-uc.a.run.app/).
 
 ## Table of Contents
 - [Project Overview](#project-overview)
