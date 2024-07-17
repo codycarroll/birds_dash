@@ -25,7 +25,7 @@ This repository contains the code for the WellWatch application, a Dash app that
 ├── birds_dash.html
 ├── data/               # Directory contain all data
 │   ├── raw/            # Sub-directory contain all RAW data
-│   └── smoothed/       # Sub-directory contain all SMOOTED data
+│   └── smoothed/       # Sub-directory contain all SMOOTHED data
 ├── figures.py          # Script for each figure in the dashboard
 ├── images/             # Directory of images used in ReadMe instructions
 └── requirements.txt    # Requirements needed for deploying application
