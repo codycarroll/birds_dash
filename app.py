@@ -86,8 +86,8 @@ def create_bird_controls():
     for b_id in bird_dict.keys():
         if b_id in allbirdsrel_long['AVIBASEID'].unique():
             bird_dict_data[b_id] = bird_dict[b_id]
-
     sorted_bird_ids = sorted(bird_dict_data.items(), key=lambda item: item[1])
+    
     return html.Div([
         dcc.Dropdown(
             id='bird-dropdown',
@@ -144,9 +144,9 @@ def create_comparison_controls():
     bird_dict_data = {}
     for b_id in bird_dict.keys():
         if b_id in allbirdsrel_long['AVIBASEID'].unique():
-            bird_dict_data[b_id] = bird_dict[b_id]
-            
-    sorted_bird_ids = sorted(bird_dict.items(), key=lambda item: item[1])
+            bird_dict_data[b_id] = bird_dict[b_id]  
+    sorted_bird_ids = sorted(bird_dict_data.items(), key=lambda item: item[1])
+
     return html.Div([
         dcc.Dropdown(
             id='multi-bird-dropdown',
