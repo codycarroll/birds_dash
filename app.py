@@ -81,7 +81,13 @@ def create_bird_controls():
             - RadioItems for selecting the scale type (fixed or relative).
             - Checklist for selecting which database years to include in the visualization.
     """
-    sorted_bird_ids = sorted(bird_dict.items(), key=lambda item: item[1])
+    # Only include birds w/ data in drop down
+    bird_dict_data = {}
+    for b_id in bird_dict.keys():
+        if b_id in allbirdsrel_long['AVIBASEID'].unique():
+            bird_dict_data[b_id] = bird_dict[b_id]
+
+    sorted_bird_ids = sorted(bird_dict_data.items(), key=lambda item: item[1])
     return html.Div([
         dcc.Dropdown(
             id='bird-dropdown',
@@ -134,6 +140,12 @@ def create_comparison_controls():
             - Checklist for selecting which database years to include in the visualization.
             - Div for displaying the comparison plots.
     """
+    # Only include birds w/ data in drop down
+    bird_dict_data = {}
+    for b_id in bird_dict.keys():
+        if b_id in allbirdsrel_long['AVIBASEID'].unique():
+            bird_dict_data[b_id] = bird_dict[b_id]
+            
     sorted_bird_ids = sorted(bird_dict.items(), key=lambda item: item[1])
     return html.Div([
         dcc.Dropdown(
@@ -247,7 +259,6 @@ def update_bird_plot(bird_id, data_type, scale_type, selected_databases):
     """
     birds_df = allbirdsrel_smoothed_long if data_type == 'smooth' else allbirdsrel_long
     birds_df = birds_df[birds_df['yr_db'].isin(selected_databases)]
-    #fig_rect, fig_polar = create_sidebysideplot(birds_df, bird_id, scale_type)
     fig_rect_polar = create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type)
     return html.Div([
         html.Div(dcc.Graph(figure=fig_rect_polar))
@@ -287,5 +298,4 @@ def update_comparison_plot(bird_ids, plot_type, data_type, scale_type, selected_
 
 
 if __name__ == '__main__':
-    #app.run_server(host='0.0.0.0', port=8080)
     app.run_server(debug=True)
