@@ -1,7 +1,6 @@
 # NorCal Bird Dash 
-dashboard repo for inat/ebird data
-
-The [dashboard is temporarily located at this link](https://bird-dash-slssljz5da-uc.a.run.app/).
+The [dashboard is located at this link](https://birds-dash-547zxcr6ea-uc.a.run.app/),
+with a [backup hosted on Dash here](https://bird-dash-slssljz5da-uc.a.run.app/).
 
 ## Table of Contents
 - [Project Overview](#project-overview)
@@ -12,22 +11,22 @@ The [dashboard is temporarily located at this link](https://bird-dash-slssljz5da
 - [Global Installation](#global-installation)
 
 ## Project Overview
-This repository contains a dashboard designed to visualize bird population trends across 260 species, with data sourced from iNaturalist and eBird.
+This repository contains a dashboard designed to visualize bird prevalence trends over different seasons across 260 species, with data sourced from iNaturalist and eBird.
 
 
 ## Repository Description
-This repository contains the code for the WellWatch application, a Dash app that monitors groundwater levels across California.
+This repository contains the code for the NorCal Bird Dash application, a Dash app that monitors seasonality patterns of birds in Northern California.
 ```
 ├── Dockerfile          # Dockerfile for app build
 ├── LICENSE             # Liscensing info for repo
 ├── README.md           # Instructions about repository
 ├── app.py              # Script for deploying the dashboard
 ├── assets/             # Contains style formatting of dashboard
-├── birds_dash.Rmd      # Cody's R work
+├── birds_dash.Rmd      # A prototype in R
 ├── birds_dash.html
 ├── data/               # Directory contain all data
 │   ├── raw/            # Sub-directory contain all RAW data
-│   └── smoothed/       # Sub-directory contain all SMOOTED data
+│   └── smoothed/       # Sub-directory contain all SMOOTHED data
 ├── figures.py          # Script for each figure in the dashboard
 ├── images/             # Directory of images used in ReadMe instructions
 └── requirements.txt    # Requirements needed for deploying application
@@ -69,6 +68,7 @@ To install this project locally, follow these steps:
     python app.py
     ```
 
+<!---
 ## Global Installation
 
 To host this project globally, use Google Cloud Run to host the dashboard. Google Cloud Run will build the dashboard from its GitHub repository and will relaunch the dashboard every time a new commit is made.
@@ -124,3 +124,4 @@ To deploy from the repository:
     - <div align="left">
         <kbd><img src="images/instructions_10.png" width=300></img></kbd>
       </div>
+--->
