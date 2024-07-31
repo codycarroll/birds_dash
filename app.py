@@ -262,7 +262,7 @@ def update_bird_plot(bird_id, data_type, scale_type, selected_databases):
     fig_rect_polar = create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type)
     return html.Div([
         html.Div(dcc.Graph(figure=fig_rect_polar, 
-                           config={"toImageButtonOptions": {"width": 1500, "height": 500, "scale" = 2, "filename": 'bird_szn_figure'}}))
+                           config={"toImageButtonOptions": {"width": 1500, "height": 500, "scale": 2, "filename": 'bird_szn_figure'}}))
     ], style={'textAlign': 'center', 'backgroundColor': 'white', 'padding': '10px', 'border': '1px solid lightgrey'})
 
 @app.callback(
