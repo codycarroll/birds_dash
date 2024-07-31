@@ -293,7 +293,9 @@ def update_comparison_plot(bird_ids, plot_type, data_type, scale_type, selected_
         else:
             fig = circular_plot(bird_dict, birds_df, [bird_id], scale_type, max_y_value)
         
-        plots.append(dcc.Graph(figure=fig, style={'display': 'inline-block', 'width': '45%', 'margin': '10px', 'border': '1px solid lightgrey'}))
+        plots.append(dcc.Graph(figure=fig, 
+                               config={"toImageButtonOptions": {"width": 750, "height": 600, "scale": 2, "filename": 'bird_szn_figure2'}}
+                               style={'display': 'inline-block', 'width': '45%', 'margin': '10px', 'border': '1px solid lightgrey'}))
 
     return html.Div(plots, style={'textAlign': 'center'})
 
