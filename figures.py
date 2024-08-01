@@ -78,7 +78,7 @@ def rectangular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
         for db_year in df_filtered['yr_db'].unique():
             # Generate interpolated values for all days in the year
             df_db_year = df_filtered[df_filtered['yr_db'] == db_year]
-            interp_func = interp1d(df_db_year['day'], df_db_year['count'], kind='linear', fill_value="extrapolate")
+            interp_func = interp1d(df_db_year['day'], df_db_year['count'], kind='quadratic', fill_value="extrapolate")
             interpolated_values = interp_func(all_days)
             
             # Determine if this db_year should be shown in the legend (prevents duplicates)
@@ -92,7 +92,7 @@ def rectangular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
                 y=interpolated_values,
                 mode='lines',
                 name=db_year_fullname.get(db_year, db_year),
-                line=dict(width=4, color=db_year_color_dict.get(str(db_year), '#000000')),
+                line=dict(width=3.5, color=db_year_color_dict.get(str(db_year), '#000000')),
                 showlegend=show_legend,
                 hovertemplate='<b>%{text}</b>: %{y:.4f}<extra></extra>',
                 text=[day_of_year_to_date_str(day) for day in all_days]
@@ -101,7 +101,7 @@ def rectangular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
     # Add grey dashed line
     fig_rect.add_shape(type="line",
                        x0=1, x1=52 * 7, y0=1 / 52, y1=1 / 52,
-                       line=dict(color="grey", dash='dash', width=2))
+                       line=dict(color="grey", dash='dash', width=3))
 
     # Determine scale of y-axis based on user input
     if scale_type == 'fixed':
@@ -121,7 +121,7 @@ def rectangular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
         dragmode='pan',
         modebar=dict(remove=['zoom', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale']),
         legend=dict(
-                title=dict(text='Database/Year and Season', font=dict(size=14)))
+                title=dict(text='Database/Year and Season', font=dict(size=13)))
     )
 
     return fig_rect
@@ -182,7 +182,7 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
         for db_year in df_filtered['yr_db'].unique():
             # Create interpolation counts
             df_db_year = df_filtered[df_filtered['yr_db'] == db_year]
-            interp_func = interp1d(df_db_year['day'], df_db_year['count'], kind='linear', fill_value="extrapolate")
+            interp_func = interp1d(df_db_year['day'], df_db_year['count'], kind='quadratic', fill_value="extrapolate")
             interpolated_counts = interp_func(all_days)
             interpolated_theta = all_days * 360 / 365 
             
@@ -192,7 +192,7 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
                 theta=interpolated_theta,
                 mode='lines',
                 name=db_year_fullname.get(db_year, db_year),
-                line=dict(width=4, color=db_year_color_dict.get(str(db_year), '#000000')),
+                line=dict(width=3.5, color=db_year_color_dict.get(str(db_year), '#000000')),
                 hovertemplate='<b>%{text}</b>: %{r:.4f}<extra></extra>',
                 text=[day_of_year_to_date_str(day) for day in all_days]
             ))
@@ -239,7 +239,7 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
             )],
         # Add legend
         legend=dict(
-            title=dict(text='Database/Year and Season', font=dict(size=14)),
+            title=dict(text='Database/Year and Season', font=dict(size=13)),
             x=1.3,
             y=0.5,
             xanchor='left',
@@ -301,7 +301,7 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
     db_years_added = set()
     for db_year in df_filtered['yr_db'].unique():
         df_db_year = df_filtered[df_filtered['yr_db'] == db_year]
-        interp_func = interp1d(df_db_year['day'], df_db_year['count'], kind='linear', fill_value="extrapolate")
+        interp_func = interp1d(df_db_year['day'], df_db_year['count'], kind='quadratic', fill_value="extrapolate")
         interpolated_counts = interp_func(all_days)
         
         show_legend = db_year not in db_years_added
@@ -312,7 +312,7 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
             y=interpolated_counts, 
             mode='lines', 
             name=db_year_fullname.get(db_year, db_year),
-            line=dict(color=db_year_color_dict.get(str(db_year), '#000000')),
+            line=dict(width = 3.5, color=db_year_color_dict.get(str(db_year), '#000000')),
             showlegend=show_legend,
             legendgroup=str(db_year),
             hovertemplate='<b>%{text}</b>: %{y:.4f}<extra></extra>',
@@ -336,7 +336,7 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
             theta=interpolated_theta,
             mode='lines',
             name=db_year_fullname.get(db_year, db_year),
-            line=dict(width=4, color=db_year_color_dict.get(str(db_year), '#000000')),
+            line=dict(width=3.5, color=db_year_color_dict.get(str(db_year), '#000000')),
             hovertemplate='<b>%{text}</b>: %{r:.4f}<extra></extra>',
             text=[day_of_year_to_date_str(day) for day in all_days],
             showlegend=False,
