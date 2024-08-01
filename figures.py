@@ -240,7 +240,7 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
         # Add legend
         legend=dict(
             title=dict(text='Database/Year and Season', font=dict(size=14)),
-            x=1.2,
+            x=1.3,
             y=0.5,
             xanchor='left',
             yanchor='middle'))
