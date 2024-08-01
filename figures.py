@@ -115,13 +115,13 @@ def rectangular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
 
     # Update plot with new x and y axis, remove zoom option, add legend
     fig_rect.update_layout(
-        xaxis=dict(title='Date', range=[1, 366], tickvals=tickvals, ticktext=ticktext),
-        yaxis=dict(title='Relative Frequency of Bird Sighting', range=yaxis_range),
+        xaxis=dict(title='Date', title_font=dict(size=18), range=[1, 366], tickvals=tickvals, ticktext=ticktext),
+        yaxis=dict(title='Relative Frequency of Bird Sighting', title_font=dict(size=18), range=yaxis_range),
         title=dict(text=f'{common_name}', x=0.5, xanchor='center'),
         dragmode='pan',
         modebar=dict(remove=['zoom', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale']),
         legend=dict(
-                title=dict(text='Database/Year and Season', font=dict(size=13)))
+                title=dict(text='Database/Year and Season', font=dict(size=12)))
     )
 
     return fig_rect
@@ -235,7 +235,7 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
                 yref='paper',
                 showarrow=False,
                 text='Date',  
-                font=dict(size=14)
+                font=dict(size=16)
             )],
         # Add legend
         legend=dict(
@@ -366,8 +366,10 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
     ticktext = [day_of_year_to_date_str(day) for day in tickvals]
 
     # Update rectangular plot layout
-    fig.update_xaxes(title_text='Date', range=[1, 366], tickvals=tickvals, ticktext=ticktext, row=1, col=1)
-    fig.update_yaxes(title_text='Relative Frequency of Bird Sighting', range=yaxis_range, row=1, col=1)
+    fig.update_xaxes(title_text='Date', title_font_size=14, range=[1, 366], 
+                    tickvals=tickvals, ticktext=ticktext, tickfont_size=14, row=1, col=1)
+    fig.update_yaxes(title_text='Relative Frequency of Bird Sighting', title_font_size=14,
+                    tickfont_size=14, range=yaxis_range, row=1, col=1)
 
     # Update polar plot layout
     radial_range = [0, 0.12] if scale_type == 'fixed' else [0, df_filtered['count'].max() * 1.1]
@@ -385,6 +387,7 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
                 direction="clockwise",
                 tickmode='array',
                 tickvals=[0, 79/365*360, 171/365*360, 264/365*360, 355/365*360],
+                #font=dict(size=16),
                 ticktext=ticktext
             )
         ),
@@ -395,11 +398,11 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
                 xref='paper',
                 yref='paper',
                 showarrow=False,
-                text='Date',
-                font=dict(size=16)
+                font=dict(size=16),
+                text='Date'
             )],
         legend=dict(
-            title=dict(text='Database/Year and Season', font=dict(size=14)),
+            title=dict(text='Database/Year and Season', font=dict(size=12)),
             x=0.61,  # Adjust position to place legend between the plots
             y=1.0,
             xanchor='right',
@@ -408,6 +411,9 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
         modebar=dict(
             remove=['zoom', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale']
         )
+    )
+    fig.update_layout(
+        margin={'t':80,'l':0,'b':60,'r':0}
     )
 
     return fig
