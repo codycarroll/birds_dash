@@ -92,7 +92,7 @@ def rectangular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
                 y=interpolated_values,
                 mode='lines',
                 name=db_year_fullname.get(db_year, db_year),
-                line=dict(color=db_year_color_dict.get(str(db_year), '#000000')),
+                line=dict(width=4, color=db_year_color_dict.get(str(db_year), '#000000')),
                 showlegend=show_legend,
                 hovertemplate='<b>%{text}</b>: %{y:.4f}<extra></extra>',
                 text=[day_of_year_to_date_str(day) for day in all_days]
@@ -121,7 +121,7 @@ def rectangular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
         dragmode='pan',
         modebar=dict(remove=['zoom', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale']),
         legend=dict(
-                title=dict(text='Database/Year and Season', font=dict(size=12)))
+                title=dict(text='Database/Year and Season', font=dict(size=14)))
     )
 
     return fig_rect
@@ -192,7 +192,7 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
                 theta=interpolated_theta,
                 mode='lines',
                 name=db_year_fullname.get(db_year, db_year),
-                line=dict(width=3, color=db_year_color_dict.get(str(db_year), '#000000')),
+                line=dict(width=4, color=db_year_color_dict.get(str(db_year), '#000000')),
                 hovertemplate='<b>%{text}</b>: %{r:.4f}<extra></extra>',
                 text=[day_of_year_to_date_str(day) for day in all_days]
             ))
@@ -200,7 +200,7 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
         # Add Gray Dashed Line
         fig_polar.add_trace(go.Scatterpolar(
             r=[1 / 52] * 100, theta=np.linspace(0, 360, 100),
-            mode='lines', line=dict(color='grey', dash='dash', width=2),
+            mode='lines', line=dict(color='grey', dash='dash', width=3),
             showlegend=False, hoverinfo='none'
         ))
 
@@ -235,11 +235,11 @@ def circular_plot(bird_dict, birds_df, bird_ids, scale_type, max_y_value):
                 yref='paper',
                 showarrow=False,
                 text='Date',  
-                font=dict(size=12)
+                font=dict(size=14)
             )],
         # Add legend
         legend=dict(
-            title=dict(text='Database/Year and Season', font=dict(size=12)),
+            title=dict(text='Database/Year and Season', font=dict(size=14)),
             x=1.2,
             y=0.5,
             xanchor='left',
@@ -336,7 +336,7 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
             theta=interpolated_theta,
             mode='lines',
             name=db_year_fullname.get(db_year, db_year),
-            line=dict(width=3, color=db_year_color_dict.get(str(db_year), '#000000')),
+            line=dict(width=4, color=db_year_color_dict.get(str(db_year), '#000000')),
             hovertemplate='<b>%{text}</b>: %{r:.4f}<extra></extra>',
             text=[day_of_year_to_date_str(day) for day in all_days],
             showlegend=False,
@@ -346,12 +346,12 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
     # Add Gray Dashed Line in the rectangular plot
     fig.add_shape(type="line",
                   x0=1, x1=53 * 7, y0=1 / 52, y1=1 / 52,
-                  line=dict(color="grey", dash='dash', width=2), row=1, col=1)
+                  line=dict(color="grey", dash='dash', width=3), row=1, col=1)
 
     # Add Gray Dashed Line in the polar plot
     fig.add_trace(go.Scatterpolar(
         r=[1 / 52] * 100, theta=np.linspace(0, 360, 100),
-        mode='lines', line=dict(color='grey', dash='dash', width=2),
+        mode='lines', line=dict(color='grey', dash='dash', width=3),
         showlegend=False, hoverinfo='none'
     ), row=1, col=2)
 
@@ -374,7 +374,7 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
     fig.update_layout(
         title=dict(
             text=f"<b>{common_name} Seasonality Pattern</b>",
-            font=dict(size=20),
+            font=dict(size=22),
             x=0.5,
             xanchor='center'
         ),
@@ -396,10 +396,10 @@ def create_sidebysideplot(bird_dict, birds_df, bird_id, scale_type='fixed'):
                 yref='paper',
                 showarrow=False,
                 text='Date',
-                font=dict(size=14)
+                font=dict(size=16)
             )],
         legend=dict(
-            title=dict(text='Database/Year and Season', font=dict(size=12)),
+            title=dict(text='Database/Year and Season', font=dict(size=14)),
             x=0.61,  # Adjust position to place legend between the plots
             y=1.0,
             xanchor='right',
