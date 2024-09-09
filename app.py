@@ -230,6 +230,10 @@ app.layout = html.Div([
 
     html.Br(),  # Line Break
     html.Br(),
+    html.Div(children='''
+    To cite this app, use the following citation:
+    C. Carroll and S. Waterman. "NorCal Bird Dashboard." 2024. https://birds-dash-547zxcr6ea-uc.a.run.app/
+    ''')
 
     html.Div([
         html.H2('Bird Seasonality Pattern', style={'textAlign': 'left', 'fontWeight': 'bold'}),
