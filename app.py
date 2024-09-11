@@ -23,6 +23,9 @@ def make_long(df):
 birdids_df = pd.read_csv("data/birdids.csv")
 birdids = birdids_df['x'].tolist()
 
+#skip these bird ids:
+skipid = ["0B1B2EB6", "77567086", "930E8874"] #["Fox Sparrow", "Selasphorus sp.", "Ridgway's Rail (obsoletus)"]
+
 # Bird dictionary:
 bird_dict = pd.read_pickle("data/name_aviD_dict_22.pickle")
 
@@ -84,7 +87,9 @@ def create_bird_controls():
     # Only include birds w/ data in drop down
     bird_dict_data = {}
     for b_id in bird_dict.keys():
-        if b_id in allbirdsrel_long['AVIBASEID'].unique():
+        if b_id in skipid:
+            pass
+        elif b_id in allbirdsrel_long['AVIBASEID'].unique():
             bird_dict_data[b_id] = bird_dict[b_id]
     sorted_bird_ids = sorted(bird_dict_data.items(), key=lambda item: item[1])
     
@@ -143,7 +148,9 @@ def create_comparison_controls():
     # Only include birds w/ data in drop down
     bird_dict_data = {}
     for b_id in bird_dict.keys():
-        if b_id in allbirdsrel_long['AVIBASEID'].unique():
+        if b_id in skipid:
+            pass
+        elif b_id in allbirdsrel_long['AVIBASEID'].unique():
             bird_dict_data[b_id] = bird_dict[b_id]  
     sorted_bird_ids = sorted(bird_dict_data.items(), key=lambda item: item[1])
 
@@ -287,7 +294,7 @@ def update_comparison_plot(bird_ids, plot_type, data_type, scale_type, selected_
         return html.Div("No birds selected")
 
     birds_df = allbirdsrel_smoothed_long if data_type == 'smooth' else allbirdsrel_long
-    birds_df = birds_df[birds_df['yr_db'].isin(selected_databases) & birds_df['AVIBASEID'].isin(bird_ids)]
+    birds_df = birds_df[birds_df['yr_db'].isin(selected_databases) & birds_df['AVIBASEID'].isin(bird_ids) & ~birds_df['AVIBASEID'].isin(skipid)]
 
     # Calculate the maximum y-value for relative scaling
     max_y_value = birds_df['count'].max() * 1.1 if scale_type == 'relative' else None
