@@ -24,7 +24,7 @@ birdids_df = pd.read_csv("data/birdids.csv")
 birdids = birdids_df['x'].tolist()
 
 #skip these bird ids:
-skipid = ["0B1B2EB6", "77567086", "930E8874"] #["Fox Sparrow", "Selasphorus sp.", "Ridgway's Rail (obsoletus)"]
+skipid = ["0B1B2EB6", "77567086", "930E8874", "115F04DD", "B12B8816", "9BEECB7E"] #["Fox Sparrow", "Selasphorus sp.", "Ridgway's Rail (obsoletus)","green-winged teal", "western flycatcher", "american coot"]
 
 # Bird dictionary:
 bird_dict = pd.read_pickle("data/name_aviD_dict_22.pickle")
