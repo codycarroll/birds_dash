@@ -213,8 +213,8 @@ app.layout = html.Div([
 
     # About section
     html.Div(children='''
-        Welcome to the NorCal Bird Dashboard, an interactive tool for visualizing bird population trends.
-        This dashboard allows you to explore data for 260 bird species with ease. Enhance your analysis by:
+        Welcome to the NorCal Bird Dashboard, an interactive tool for visualizing bird population trends in Northern CA and Nevada.
+        This dashboard allows you to explore data for 254 bird species with ease. Enhance your analysis by:
     '''),
     html.Ul([
         html.Li([
