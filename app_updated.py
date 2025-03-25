@@ -24,45 +24,115 @@ birdids_df = pd.read_csv("data/birdids.csv")
 birdids = birdids_df['x'].tolist()
 
 #skip these bird ids:
-skipid = ["0B1B2EB6", "77567086", "930E8874", "115F04DD", "B12B8816", "9BEECB7E"] #["Fox Sparrow", "Selasphorus sp.", "Ridgway's Rail (obsoletus)","green-winged teal", "western flycatcher", "american coot"]
+skipid = ["0B1B2EB6", "77567086", "930E8874"] #["Fox Sparrow", "Selasphorus sp.", "Ridgway's Rail (obsoletus)"]
 
 # Bird dictionary:
 bird_dict = pd.read_pickle("data/name_aviD_dict_22.pickle")
 
 # Raw data:
+# ebird17rel = pd.read_csv("data/raw/ebird17rel_raw.csv")
+# ebird18rel = pd.read_csv("data/raw/ebird18rel_raw.csv")
 ebird19rel = pd.read_csv("data/raw/ebird19rel_raw.csv")
+# ebird20rel = pd.read_csv("data/raw/ebird20rel_raw.csv")
+# ebird21rel = pd.read_csv("data/raw/ebird21rel_raw.csv")
 ebird22rel = pd.read_csv("data/raw/ebird22rel_raw.csv")
+# ebird23rel = pd.read_csv("data/raw/ebird23rel_raw.csv")
+
+# inat17rel = pd.read_csv("data/raw/inat17rel_raw.csv")
+# inat18rel = pd.read_csv("data/raw/inat18rel_raw.csv")
 inat19rel = pd.read_csv("data/raw/inat19rel_raw.csv")
+# inat20rel = pd.read_csv("data/raw/inat20rel_raw.csv")
+# inat21rel = pd.read_csv("data/raw/inat21rel_raw.csv")
 inat22rel = pd.read_csv("data/raw/inat22rel_raw.csv")
+# inat23rel = pd.read_csv("data/raw/inat23rel_raw.csv")
 
 # Smoothed data:
+# ebird17rel_smoothed = pd.read_csv("data/smoothed/ebird17rel_fsmoothed.csv")
+# ebird18rel_smoothed = pd.read_csv("data/smoothed/ebird18rel_fsmoothed.csv")
 ebird19rel_smoothed = pd.read_csv("data/smoothed/ebird19rel_fsmoothed.csv")
+# ebird20rel_smoothed = pd.read_csv("data/smoothed/ebird20rel_fsmoothed.csv")
+# ebird21rel_smoothed = pd.read_csv("data/smoothed/ebird21rel_fsmoothed.csv")
 ebird22rel_smoothed = pd.read_csv("data/smoothed/ebird22rel_fsmoothed.csv")
+# ebird23rel_smoothed = pd.read_csv("data/smoothed/ebird23rel_fsmoothed.csv")
+
+# inat17rel_smoothed = pd.read_csv("data/smoothed/inat17rel_fsmoothed.csv")
+# inat18rel_smoothed = pd.read_csv("data/smoothed/inat18rel_fsmoothed.csv")
 inat19rel_smoothed = pd.read_csv("data/smoothed/inat19rel_fsmoothed.csv")
+# inat20rel_smoothed = pd.read_csv("data/smoothed/inat20rel_fsmoothed.csv")
+# inat21rel_smoothed = pd.read_csv("data/smoothed/inat21rel_fsmoothed.csv")
 inat22rel_smoothed = pd.read_csv("data/smoothed/inat22rel_fsmoothed.csv")
+# inat23rel_smoothed = pd.read_csv("data/smoothed/inat23rel_fsmoothed.csv")
 
 # Transforming data to long format
+# ebird17rel_long = make_long(ebird17rel)
+# ebird18rel_long = make_long(ebird18rel)
 ebird19rel_long = make_long(ebird19rel)
+# ebird20rel_long = make_long(ebird20rel)
+# ebird21rel_long = make_long(ebird21rel)
 ebird22rel_long = make_long(ebird22rel)
-inat19rel_long = make_long(inat19rel)
-inat22rel_long = make_long(inat22rel)
+# ebird23rel_long = make_long(ebird23rel)
 
+# inat17rel_long = make_long(inat17rel)
+# inat18rel_long = make_long(inat18rel)
+inat19rel_long = make_long(inat19rel)
+# inat20rel_long = make_long(inat20rel)
+# inat21rel_long = make_long(inat21rel)
+inat22rel_long = make_long(inat22rel)
+# inat23rel_long = make_long(inat23rel)
+
+# ebird17rel_smoothed_long = make_long(ebird17rel_smoothed)
+# ebird18rel_smoothed_long = make_long(ebird18rel_smoothed)
 ebird19rel_smoothed_long = make_long(ebird19rel_smoothed)
+# ebird20rel_smoothed_long = make_long(ebird20rel_smoothed)
+# ebird21rel_smoothed_long = make_long(ebird21rel_smoothed)
 ebird22rel_smoothed_long = make_long(ebird22rel_smoothed)
+# ebird23rel_smoothed_long = make_long(ebird23rel_smoothed)
+
+# inat17rel_smoothed_long = make_long(inat17rel_smoothed)
+# inat18rel_smoothed_long = make_long(inat18rel_smoothed)
 inat19rel_smoothed_long = make_long(inat19rel_smoothed)
+# inat20rel_smoothed_long = make_long(inat20rel_smoothed)
+# inat21rel_smoothed_long = make_long(inat21rel_smoothed)
 inat22rel_smoothed_long = make_long(inat22rel_smoothed)
+# inat23rel_smoothed_long = make_long(inat23rel_smoothed)
+
 
 # Combining all long format data into one DataFrame
-allbirdsrel_long = pd.concat([ebird19rel_long,
+allbirdsrel_long = pd.concat([
+                            #   ebird17rel_long,
+                            #   ebird18rel_long,
+                              ebird19rel_long,
+                            #   ebird20rel_long,
+                            #   ebird21rel_long,
                               ebird22rel_long,
+                            #   ebird23rel_long,
+                            #   inat17rel_long,
+                            #   inat18rel_long,
                               inat19rel_long,
-                              inat22rel_long],
+                            #   inat20rel_long,
+                            #   inat21rel_long,
+                              inat22rel_long
+                            #   inat23rel_long
+                              ],
                              ignore_index=True)
 
-allbirdsrel_smoothed_long = pd.concat([ebird19rel_smoothed_long,
+allbirdsrel_smoothed_long = pd.concat([
+                                    #    ebird17rel_smoothed_long,
+                                    #    ebird18rel_smoothed_long, 
+                                       ebird19rel_smoothed_long,
+                                    #    ebird20rel_smoothed_long,
+                                    #    ebird21rel_smoothed_long,
                                        ebird22rel_smoothed_long,
+                                    #    ebird23rel_smoothed_long,
+
+                                    #    inat17rel_smoothed_long,
+                                    #    inat18rel_smoothed_long,
                                        inat19rel_smoothed_long,
-                                       inat22rel_smoothed_long],
+                                    #    inat20rel_smoothed_long,
+                                    #    inat21rel_smoothed_long,
+                                       inat22rel_smoothed_long
+                                    #    inat23rel_smoothed_long
+                                       ],
                                       ignore_index=True)
 
 
@@ -120,12 +190,23 @@ def create_bird_controls():
         dcc.Checklist(
             id='database-year-checklist',
             options=[
+                {'label': 'eBird 2017', 'value': 'ebird17'},
+                {'label': 'eBird 2018', 'value': 'ebird18'},
                 {'label': 'eBird 2019', 'value': 'ebird19'},
+                {'label': 'eBird 2020', 'value': 'ebird20'},
+                {'label': 'eBird 2021', 'value': 'ebird21'},
                 {'label': 'eBird 2022', 'value': 'ebird22'},
+                {'label': 'eBird 2023', 'value': 'ebird23'},
+                {'label': 'iNat 2017', 'value': 'inat17'},
+                {'label': 'iNat 2018', 'value': 'inat18'},
                 {'label': 'iNat 2019', 'value': 'inat19'},
-                {'label': 'iNat 2022', 'value': 'inat22'}
+                {'label': 'iNat 2020', 'value': 'inat20'},
+                {'label': 'iNat 2021', 'value': 'inat21'},
+                {'label': 'iNat 2022', 'value': 'inat22'},
+                {'label': 'iNat 2023', 'value': 'inat23'}
             ],
-            value=['ebird19', 'ebird22', 'inat19', 'inat22'],  # Default: all selected
+            value=['ebird17', 'ebird18', 'ebird19', 'ebird20', 'ebird21', 'ebird22', 'ebird23', 
+                   'inat17', 'inat18', 'inat19', 'inat20', 'inat21', 'inat22', 'inat23'],  # Default: all selected
             inline=True
         )
     ])
@@ -191,12 +272,23 @@ def create_comparison_controls():
         dcc.Checklist(
             id='database-year-checklist-multi',
             options=[
+                {'label': 'eBird 2017', 'value': 'ebird17'},
+                {'label': 'eBird 2018', 'value': 'ebird18'},
                 {'label': 'eBird 2019', 'value': 'ebird19'},
+                {'label': 'eBird 2020', 'value': 'ebird20'},
+                {'label': 'eBird 2021', 'value': 'ebird21'},
                 {'label': 'eBird 2022', 'value': 'ebird22'},
+                {'label': 'eBird 2023', 'value': 'ebird23'},
+                {'label': 'iNat 2017', 'value': 'inat17'},
+                {'label': 'iNat 2018', 'value': 'inat18'},
                 {'label': 'iNat 2019', 'value': 'inat19'},
-                {'label': 'iNat 2022', 'value': 'inat22'}
+                {'label': 'iNat 2020', 'value': 'inat20'},
+                {'label': 'iNat 2021', 'value': 'inat21'},
+                {'label': 'iNat 2022', 'value': 'inat22'},
+                {'label': 'iNat 2023', 'value': 'inat23'}
             ],
-            value=['ebird19', 'ebird22', 'inat19', 'inat22'],  # Default: all selected
+            value=['ebird17', 'ebird18', 'ebird19', 'ebird20', 'ebird21', 'ebird22', 'ebird23', 
+                   'inat17', 'inat18', 'inat19', 'inat20', 'inat21', 'inat22', 'inat23'],  # Default: all selected
             inline=True
         ),
         html.Div(id='comparison-plot-container')
@@ -213,8 +305,8 @@ app.layout = html.Div([
 
     # About section
     html.Div(children='''
-        Welcome to the NorCal Bird Dashboard, an interactive tool for visualizing bird population trends in Northern CA and Nevada.
-        This dashboard allows you to explore data for 254 bird species with ease. Enhance your analysis by:
+        Welcome to the NorCal Bird Dashboard, an interactive tool for visualizing bird population trends.
+        This dashboard allows you to explore data for 260 bird species with ease. Enhance your analysis by:
     '''),
     html.Ul([
         html.Li([
@@ -238,7 +330,7 @@ app.layout = html.Div([
     html.Br(),  # Line Break
     html.Div(children='''
     To cite this app, use the following citation:
-     S. Waterman and C. Carroll. "NorCal Bird Dashboard." 2024. https://birds-dash-547zxcr6ea-uc.a.run.app/
+    C. Carroll and S. Waterman. "NorCal Bird Dashboard." 2024. https://birds-dash-547zxcr6ea-uc.a.run.app/
     '''),
 
     html.Br(),  # Line Break
