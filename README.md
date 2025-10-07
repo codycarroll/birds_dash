@@ -70,7 +70,7 @@ To install this project locally, follow these steps:
     python app.py
     ```
     
-<!-- 
+
     ## Global Installation Tutorial
 
     To host a project globally, use Google Cloud Run to host the dashboard. Google Cloud Run will build the dashboard from its GitHub repository and will relaunch the dashboard every time a new commit is made.
@@ -128,4 +128,3 @@ To install this project locally, follow these steps:
           </div>
 
 
- -->
